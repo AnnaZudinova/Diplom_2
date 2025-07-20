@@ -1,4 +1,4 @@
-import io.qameta.allure.Description;
+import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
 import org.junit.After;
 import org.junit.Before;
@@ -19,7 +19,7 @@ public class OrderCreationTests extends BaseTests{
     }
 
     @Test
-    @Description ("Создание заказа с авторизацией с ингридиентами")
+    @DisplayName("Создание заказа с авторизацией с ингридиентами")
     public void checkOrderCreationWithAuthorizationWithIngredients () {
         Response response= orderSteps.createOrder();
 
@@ -30,7 +30,7 @@ public class OrderCreationTests extends BaseTests{
 
     //Падает, т.к. заказ создается без авторизации, хотя не должен
     @Test
-    @Description ("Создание заказа без авторизации с ингридиентами")
+    @DisplayName ("Создание заказа без авторизации с ингридиентами")
     public void checkOrderCreationWithoutAuthorizationWithIngredients () {
         Response response= orderSteps.createOrderUnauthorized();
 
@@ -38,7 +38,7 @@ public class OrderCreationTests extends BaseTests{
     }
 
     @Test
-    @Description ("Создание заказа с авторизацией без ингридиентов")
+    @DisplayName ("Создание заказа с авторизацией без ингридиентов")
     public void checkOrderCreationWithAuthorizationWithoutIngredients () {
         Response response= orderSteps.createOrderWithoutIngredients();
 
@@ -48,7 +48,7 @@ public class OrderCreationTests extends BaseTests{
     }
 
     @Test
-    @Description ("Создание заказа с авторизацией с неверным хешем ингредиентов")
+    @DisplayName ("Создание заказа с авторизацией с неверным хешем ингредиентов")
     public void checkOrderCreationWithAuthorizationWithNonExistingIngredientsHash () {
         Response response= orderSteps.createOrderWithNonExistingIngredientsHash();
 

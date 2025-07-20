@@ -1,5 +1,5 @@
+import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
-import jdk.jfr.Description;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,13 +11,13 @@ public class UserLoginTests extends BaseTests{
     UserSteps userSteps = new UserSteps();
 
     @Before
-    @Description("Создать пользователя для теста")
+    @DisplayName("Создать пользователя для теста")
     public void createUser () {
         userSteps.createUser();
     }
 
     @Test
-    @Description("Вход существующим пользователем")
+    @DisplayName("Вход существующим пользователем")
     public void checkExistingUserLoginStatusCode200 () {
         Response response = userSteps.existingUserLogin();
         response.then().statusCode(SC_OK)
@@ -26,7 +26,7 @@ public class UserLoginTests extends BaseTests{
     }
 
     @Test
-    @Description("Вход c несуществующей почтой")
+    @DisplayName("Вход c несуществующей почтой")
     public void checkLoginWithNonExistingEmail () {
 
         Response response = userSteps.loginWithNonExistingEmail();
@@ -36,7 +36,7 @@ public class UserLoginTests extends BaseTests{
     }
 
     @Test
-    @Description("Вход c несуществующим паролем")
+    @DisplayName("Вход c несуществующим паролем")
     public void checkLoginWithNonExistingPassword () {
 
         Response response = userSteps.loginWithNonExistingPassword();

@@ -1,7 +1,6 @@
 package steps;
 
 import io.qameta.allure.Step;
-import io.qameta.allure.junit4.DisplayName;
 import io.restassured.http.ContentType;
 import io.restassured.http.Header;
 import io.restassured.response.Response;
@@ -21,9 +20,22 @@ public class UserSteps extends Endpoints{
 
     User user = new User(email,password,name);
 
+    @Step ("Установить email")
+    public void setEmail(String email) {
+        user.setEmail(email);
+    }
 
-    @Step
-    @DisplayName("Создать уникального пользователя")
+    @Step ("Установить пароль")
+    public void setPassword(String password) {
+        user.setPassword(password);
+    }
+
+    @Step ("Установить имя")
+    public void setName(String name) {
+        user.setName(name);
+    }
+
+    @Step ("Создать уникального пользователя")
     public Response createUser() {
         Response response= given()
                 .contentType(ContentType.JSON)
@@ -37,8 +49,7 @@ public class UserSteps extends Endpoints{
         return response;
     }
 
-    @Step
-    @DisplayName("Создать неуникального пользователя")
+    @Step ("Создать неуникального пользователя")
     public Response createSameUser() {
         return given()
                 .contentType(ContentType.JSON)
@@ -47,44 +58,7 @@ public class UserSteps extends Endpoints{
                 .post(CREATE_USER);
     }
 
-    @Step
-    @DisplayName("создать пользователя c пустым полем Email")
-    public Response createUserWithEmptyEmail() {
-        user.setEmail(null);
-
-        return given()
-                .contentType(ContentType.JSON)
-                .and()
-                .body(user)
-                .post(CREATE_USER);
-    }
-
-    @Step
-    @DisplayName("создать пользователя с пустым полем password")
-    public Response createUserWithEmptyPassword() {
-        user.setPassword(null);
-
-        return given()
-                .contentType(ContentType.JSON)
-                .and()
-                .body(user)
-                .post(CREATE_USER);
-    }
-
-    @Step
-    @DisplayName("создать пользователя с пустым полем name")
-    public Response createUserWithEmptyName() {
-        user.setName(null);
-
-        return given()
-                .contentType(ContentType.JSON)
-                .and()
-                .body(user)
-                .post(CREATE_USER);
-    }
-
-    @Step
-    @DisplayName("Авторизация существующего пользователя")
+    @Step ("Авторизация существующего пользователя")
     public Response existingUserLogin () {
         return given()
                 .contentType(ContentType.JSON)
@@ -93,8 +67,7 @@ public class UserSteps extends Endpoints{
                 .post(LOGIN);
     }
 
-    @Step
-    @DisplayName("Авторизация с несуществующей почтой")
+    @Step ("Авторизация с несуществующей почтой")
     public Response loginWithNonExistingEmail () {
         user.setEmail(new Random().nextInt() + "-test@gmail.com");
 
@@ -105,8 +78,7 @@ public class UserSteps extends Endpoints{
                 .post(LOGIN);
     }
 
-    @Step
-    @DisplayName("Авторизация с несуществующим паролем")
+    @Step ("Авторизация с несуществующим паролем")
     public Response loginWithNonExistingPassword () {
         user.setPassword(RandomStringUtils.randomAlphabetic(7));
 
@@ -117,8 +89,7 @@ public class UserSteps extends Endpoints{
                 .post(LOGIN);
     }
 
-       @Step
-       @DisplayName("Удалить пользователя")
+       @Step ("Удалить пользователя")
        public void deleteUser(){
        try  {given()
                 .contentType(ContentType.JSON)

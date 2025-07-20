@@ -1,19 +1,21 @@
 package model;
 
-public class Order {
-    private String[] ingredients;
+import java.util.List;
 
-    public Order (String[] ingredients) {
+public class Order {
+    private List<String> ingredients;
+
+    public Order (List<String> ingredients) {
         this.ingredients=ingredients;
     }
 
     public Order () {}
 
-    public String[] getIngredients() {
+    public List<String> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(String[] ingredients) {
+    public void setIngredients(List<String> ingredients) {
         this.ingredients = ingredients;
     }
 }

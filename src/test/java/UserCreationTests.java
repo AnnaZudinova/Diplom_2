@@ -1,5 +1,5 @@
+import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
-import jdk.jfr.Description;
 import org.junit.After;
 import org.junit.Test;
 import steps.UserSteps;
@@ -10,7 +10,7 @@ public class UserCreationTests extends BaseTests {
     UserSteps userSteps = new UserSteps();
 
     @Test
-    @Description("Создать уникального пользователя")
+    @DisplayName("Создать уникального пользователя")
     public void checkUserCreationStatusCode200 () {
         Response response = userSteps.createUser();
         response.then().statusCode(SC_OK)
@@ -19,7 +19,7 @@ public class UserCreationTests extends BaseTests {
     }
 
     @Test
-    @Description("Нельзя создать пользователя, который уже зарегистрирован")
+    @DisplayName("Нельзя создать пользователя, который уже зарегистрирован")
     public void checkSameUserCreationStatusCode403() {
         Response firstResponse = userSteps.createUser();
         Response secondResponse = userSteps.createSameUser();
@@ -29,27 +29,30 @@ public class UserCreationTests extends BaseTests {
     }
 
     @Test
-    @Description("Нельзя создать пользователя без email")
+    @DisplayName("Нельзя создать пользователя без email")
     public void checkUserCreationWithoutEmailStatusCode403(){
-        Response response = userSteps.createUserWithEmptyEmail();
+        userSteps.setEmail(null);
+        Response response = userSteps.createUser();
         response.then().statusCode(SC_FORBIDDEN)
                 .and()
                 .body("message",equalTo("Email, password and name are required fields"));
     }
 
     @Test
-    @Description("Нельзя создать пользователя без password")
+    @DisplayName("Нельзя создать пользователя без password")
     public void checkUserCreationWithoutPasswordStatusCode403(){
-        Response response = userSteps.createUserWithEmptyPassword();
+        userSteps.setPassword(null);
+        Response response = userSteps.createUser();
         response.then().statusCode(SC_FORBIDDEN)
                 .and()
                 .body("message",equalTo("Email, password and name are required fields"));
     }
 
     @Test
-    @Description("Нельзя создать пользователя без name")
+    @DisplayName("Нельзя создать пользователя без name")
     public void checkUserCreationWithoutNameStatusCode403(){
-        Response response = userSteps.createUserWithEmptyName();
+        userSteps.setName(null);
+        Response response = userSteps.createUser();
         response.then().statusCode(SC_FORBIDDEN)
                 .and()
                 .body("message",equalTo("Email, password and name are required fields"));

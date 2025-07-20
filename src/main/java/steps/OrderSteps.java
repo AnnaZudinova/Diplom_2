@@ -1,13 +1,14 @@
 package steps;
 
 import io.qameta.allure.Step;
-import io.qameta.allure.junit4.DisplayName;
 import io.restassured.http.ContentType;
 import io.restassured.http.Header;
 import io.restassured.response.Response;
-import model.Ingredients;
 import model.Order;
 import org.apache.commons.lang3.RandomStringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
@@ -15,30 +16,24 @@ public class OrderSteps extends Endpoints {
     UserSteps userSteps = new UserSteps();
     Order order=new Order();
 
-    @Step
-    @DisplayName("Получить список ингредиентов")
-    public String[] getIngredientIds() {
-        Ingredients ingredients = given()
-                .get(GET_INGREDIENTS)
-                .body()
-                .as(Ingredients.class);
-
-        String[] ids = new String[ingredients.getData().length];
-        for (int i = 0; i < ingredients.getData().length; i++) {
-            ids[i] = ingredients.getData()[i].get_id();
+    @Step ("Получить список ингредиентов")
+        public List<String> getIngredientIds() {
+            Response response = given()
+                    .get(GET_INGREDIENTS);
+            List<String> ids = response.then()
+                    .extract()
+                    .body()
+                    .jsonPath()
+                    .getList("data._id");
+            return ids;
         }
 
-        return ids;
-    }
-
-    @Step
-    @DisplayName("Установить значения ингредиентов в заказе")
+    @Step ("Установить значения ингредиентов в заказе")
     public void setOrderIngredients(){
         order.setIngredients(getIngredientIds());
     }
 
-    @Step
-    @DisplayName("Создать заказ с ингредиентами с авторизацией")
+    @Step ("Создать заказ с ингредиентами с авторизацией")
     public Response createOrder() {
         setOrderIngredients();
         return given()
@@ -47,8 +42,7 @@ public class OrderSteps extends Endpoints {
                 .body(order)
                 .post(CREATE_ORDER);
     }
-    @Step
-    @DisplayName("Создать заказ с ингредиентами без авторизации")
+    @Step ("Создать заказ с ингредиентами без авторизации")
     public Response createOrderUnauthorized() {
         setOrderIngredients();
         return given()
@@ -57,8 +51,7 @@ public class OrderSteps extends Endpoints {
                 .post(CREATE_ORDER);
     }
 
-    @Step
-    @DisplayName("Создать заказ без ингредиентов")
+    @Step ("Создать заказ без ингредиентов")
     public Response createOrderWithoutIngredients() {
         return given()
                 .contentType(ContentType.JSON)
@@ -66,10 +59,13 @@ public class OrderSteps extends Endpoints {
                 .post(CREATE_ORDER);
     }
 
-    @Step
-    @DisplayName("Создать заказ с неверным хешем ингредиентов")
+    @Step ("Создать заказ с неверным хешем ингредиентов")
     public Response createOrderWithNonExistingIngredientsHash() {
-        String[] randomIngredients = new String[] {RandomStringUtils.randomAlphanumeric(24),RandomStringUtils.randomAlphanumeric(24),RandomStringUtils.randomAlphanumeric(24)};
+        List<String> randomIngredients = new ArrayList<>();
+        randomIngredients.add(RandomStringUtils.randomAlphanumeric(24));
+        randomIngredients.add(RandomStringUtils.randomAlphanumeric(24));
+        randomIngredients.add(RandomStringUtils.randomAlphanumeric(24));
+
         order.setIngredients(randomIngredients);
 
         return given()
