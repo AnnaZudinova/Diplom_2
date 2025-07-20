@@ -32,7 +32,7 @@ public class UserLoginTests extends BaseTests{
         Response response = userSteps.loginWithNonExistingEmail();
         response.then().statusCode(SC_UNAUTHORIZED)
                 .and()
-                .body("success",equalTo(false));
+                .body("message",equalTo("email or password are incorrect"));
     }
 
     @Test
@@ -42,7 +42,7 @@ public class UserLoginTests extends BaseTests{
         Response response = userSteps.loginWithNonExistingPassword();
         response.then().statusCode(SC_UNAUTHORIZED)
                 .and()
-                .body("success",equalTo(false));
+                .body("message",equalTo("email or password are incorrect"));
     }
 
     @After
